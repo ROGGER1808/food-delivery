@@ -10,28 +10,29 @@ import (
 	"net/http"
 )
 
-func Create(appCtx appctx.AppContext) gin.HandlerFunc {
+func Update(appCtx appctx.AppContext) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		db := appCtx.GetMainDBConnection()
-		requester := c.MustGet(common.CurrentUser).(common.Requester)
 
-		var data restaurantmodel.RestaurantCreate
+		uid, err := common.FromBase58(c.Param("id"))
+		if err != nil {
+			panic(common.ErrInvalidRequest(err))
+		}
+
+		var data restaurantmodel.RestaurantUpdate
 
 		if err := c.ShouldBind(&data); err != nil {
-			c.JSON(http.StatusBadRequest, common.ErrInvalidRequest(err))
-			return
+			panic(common.ErrInvalidRequest(err))
 		}
-
-		data.OwnerId = requester.GetUserId()
 
 		store := restaurantstorage.NewStore(db)
-		biz := restaurantbiz.NewCreateRestaurantBiz(store)
-		if err := biz.Create(c.Request.Context(), &data); err != nil {
+		biz := restaurantbiz.NewUpdateRestaurantBiz(store)
+		err = biz.Update(c.Request.Context(), int(uid.GetLocalID()), &data)
+		if err != nil {
 			panic(err)
 		}
-		data.Mask(false)
 
-		c.JSON(http.StatusCreated, common.SimpleSuccessResponse(data.FakeId))
+		c.JSON(http.StatusOK, common.SimpleSuccessResponse(true))
 	}
 
 }

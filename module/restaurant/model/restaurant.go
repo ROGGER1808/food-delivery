@@ -1,23 +1,39 @@
 package restaurantmodel
 
-import "time"
+import (
+	"gitlab.com/genson1808/food-delivery/common"
+	"gitlab.com/genson1808/food-delivery/foundation/fimage"
+)
+
+const EntityName = "Restaurant"
 
 type Restaurant struct {
-	Id        int       `json:"id" gorm:"column:id;"`
-	Name      string    `json:"name" gorm:"column:name;"`
-	Addr      string    `json:"addr" gorm:"column:addr;"`
-	Lat       float32   `json:"lat" gorm:"column:lat;"`
-	Lng       float32   `json:"lng" gorm:"column:Lng;"`
-	Status    int       `json:"status" gorm:"column:status;"`
-	CreatedAt time.Time `json:"created_at" gorm:"column:created_at;"`
-	UpdatedAt time.Time `json:"updated_at" gorm:"column:updated_at;"`
+	common.SQLModel `json:",inline"`
+	Name            string             `json:"name" gorm:"column:name;"`
+	Addr            string             `json:"addr" gorm:"column:addr;"`
+	Lat             float32            `json:"lat" gorm:"column:lat;"`
+	Lng             float32            `json:"lng" gorm:"column:Lng;"`
+	Logo            *fimage.Image      `json:"logo" gorm:"column:logo;"`
+	Cover           *fimage.Images     `json:"cover" gorm:"column:cover;"`
+	OwnerId         int                `json:"-" gorm:"column:owner_id;"`
+	User            *common.SimpleUser `json:"user" gorm:"foreignKey:OwnerId;"`
+	LikeCount       int                `json:"like_count" gorm:"column:-;"`
 }
 
 func (Restaurant) TableName() string { return "restaurants" }
 
+func (r *Restaurant) Mask(isAdminOrOwner bool) {
+	r.GenUID(common.DbTypeRestaurant)
+	if r.User != nil {
+		r.User.Mask(false)
+	}
+}
+
 type RestaurantUpdate struct {
-	Name *string `json:"name" gorm:"column:name;"`
-	Addr *string `json:"addr" gorm:"column:addr;"`
+	Name  *string        `json:"name" gorm:"column:name;"`
+	Addr  *string        `json:"addr" gorm:"column:addr;"`
+	Logo  *fimage.Image  `json:"logo" gorm:"column:logo;"`
+	Cover *fimage.Images `json:"cover" gorm:"column:cover;"`
 }
 
 func (RestaurantUpdate) TableName() string {
@@ -25,8 +41,16 @@ func (RestaurantUpdate) TableName() string {
 }
 
 type RestaurantCreate struct {
-	Name string `json:"name" gorm:"column:name;"`
-	Addr string `json:"addr" gorm:"column:addr;"`
+	common.SQLModel `json:",inline"`
+	Name            string         `json:"name" gorm:"column:name;"`
+	Addr            string         `json:"addr" gorm:"column:addr;"`
+	OwnerId         int            `json:"-" gorm:"column:owner_id;"`
+	Logo            *fimage.Image  `json:"logo" gorm:"column:logo;"`
+	Cover           *fimage.Images `json:"cover" gorm:"column:cover;"`
+}
+
+func (r *RestaurantCreate) Mask(isAdminOrOwner bool) {
+	r.GenUID(common.DbTypeRestaurant)
 }
 
 func (RestaurantCreate) TableName() string {
