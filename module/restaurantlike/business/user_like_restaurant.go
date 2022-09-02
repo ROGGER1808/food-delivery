@@ -11,20 +11,21 @@ type UserLikeRestaurantStore interface {
 	Create(ctx context.Context, data *restaurantlikemodel.Like) error
 }
 
-type RestaurantStore interface {
+type RestaurantLikeStore interface {
 	FindByCondition(
 		ctx context.Context,
 		condition map[string]any,
 		moreKeys ...string,
 	) (*restaurantmodel.Restaurant, error)
+	IncreaseLikeCount(ctx context.Context, id int) error
 }
 
 type userLikeRestaurantBiz struct {
 	store           UserLikeRestaurantStore
-	restaurantStore RestaurantStore
+	restaurantStore RestaurantLikeStore
 }
 
-func NewUserLikeRestaurantBiz(store UserLikeRestaurantStore, restaurantStore RestaurantStore) *userLikeRestaurantBiz {
+func NewUserLikeRestaurantBiz(store UserLikeRestaurantStore, restaurantStore RestaurantLikeStore) *userLikeRestaurantBiz {
 	return &userLikeRestaurantBiz{store: store, restaurantStore: restaurantStore}
 }
 
@@ -42,6 +43,8 @@ func (biz *userLikeRestaurantBiz) LikeRestaurant(ctx context.Context, data *rest
 	if err != nil {
 		return restaurantlikemodel.ErrCannotLikeRestaurant(err)
 	}
+
+	_ = biz.restaurantStore.IncreaseLikeCount(ctx, data.RestaurantId)
 
 	return nil
 }

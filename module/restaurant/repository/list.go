@@ -4,7 +4,6 @@ import (
 	"context"
 	"gitlab.com/genson1808/food-delivery/common"
 	restaurantmodel "gitlab.com/genson1808/food-delivery/module/restaurant/model"
-	"log"
 )
 
 type ListRestaurantStore interface {
@@ -41,20 +40,20 @@ func (repo *listRestaurantRepo) List(
 		return nil, common.ErrCannotListEntity(restaurantmodel.EntityName, err)
 	}
 
-	ids := make([]int, len(result))
-	for i := range result {
-		ids[i] = result[i].Id
-	}
-
-	likeMap, err := repo.likeStore.GetRestaurantLike(ctx, ids)
-	if err != nil {
-		log.Println(err)
-		return result, nil
-	}
-
-	for i, item := range result {
-		result[i].LikeCount = likeMap[item.Id]
-	}
+	//ids := make([]int, len(result))
+	//for i := range result {
+	//	ids[i] = result[i].Id
+	//}
+	//
+	//likeMap, err := repo.likeStore.GetRestaurantLike(ctx, ids)
+	//if err != nil {
+	//	log.Println(err)
+	//	return result, nil
+	//}
+	//
+	//for i, item := range result {
+	//	result[i].LikeCount = likeMap[item.Id]
+	//}
 
 	return result, nil
 }

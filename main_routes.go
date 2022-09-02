@@ -31,5 +31,6 @@ func setupRoutes(appContext appctx.AppContext, v1 *gin.RouterGroup) {
 	restaurants.PATCH("/:id", httprestaurant.Update(appContext))
 	restaurants.GET("/", httprestaurant.List(appContext))
 	restaurants.POST("/:id/like", httprestaurantlike.UserLikeRestaurant(appContext))
-	restaurants.POST("/:id/dislike", httprestaurantlike.UserDislikeRestaurant(appContext))
+	restaurants.DELETE("/:id/dislike", httprestaurantlike.UserDislikeRestaurant(appContext))
+	restaurants.GET("/:id/liked_users", httprestaurantlike.GetUserLikedRestaurant(appContext))
 }
