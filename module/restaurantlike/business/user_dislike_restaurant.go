@@ -11,12 +11,21 @@ type UserDislikeRestaurantStore interface {
 	Delete(ctx context.Context, data *restaurantlikemodel.Like) error
 }
 
-type userDislikeRestaurantBiz struct {
-	store           UserDislikeRestaurantStore
-	restaurantStore RestaurantStore
+type RestaurantDislikeStore interface {
+	FindByCondition(
+		ctx context.Context,
+		condition map[string]any,
+		moreKeys ...string,
+	) (*restaurantmodel.Restaurant, error)
+	DecreaseLikeCount(ctx context.Context, id int) error
 }
 
-func NewUserDislikeRestaurantBiz(store UserDislikeRestaurantStore, restaurantStore RestaurantStore) *userDislikeRestaurantBiz {
+type userDislikeRestaurantBiz struct {
+	store           UserDislikeRestaurantStore
+	restaurantStore RestaurantDislikeStore
+}
+
+func NewUserDislikeRestaurantBiz(store UserDislikeRestaurantStore, restaurantStore RestaurantDislikeStore) *userDislikeRestaurantBiz {
 	return &userDislikeRestaurantBiz{store: store, restaurantStore: restaurantStore}
 }
 
@@ -34,6 +43,8 @@ func (biz *userDislikeRestaurantBiz) DislikeRestaurant(ctx context.Context, data
 	if err != nil {
 		return restaurantlikemodel.ErrCannotDislikeRestaurant(err)
 	}
+
+	_ = biz.restaurantStore.DecreaseLikeCount(ctx, data.RestaurantId)
 
 	return nil
 }
