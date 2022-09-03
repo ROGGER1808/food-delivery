@@ -3,7 +3,7 @@ package userbusiness
 import (
 	"context"
 	"gitlab.com/genson1808/food-delivery/common"
-	"gitlab.com/genson1808/food-delivery/foundation/tokenprovider"
+	"gitlab.com/genson1808/food-delivery/component/tokenprovider"
 	usermodel "gitlab.com/genson1808/food-delivery/module/user/model"
 )
 

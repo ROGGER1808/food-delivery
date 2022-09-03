@@ -3,8 +3,7 @@ package httprestaurantlike
 import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/genson1808/food-delivery/common"
-	"gitlab.com/genson1808/food-delivery/foundation/appctx"
-	restaurantstorage "gitlab.com/genson1808/food-delivery/module/restaurant/storage"
+	"gitlab.com/genson1808/food-delivery/component/appctx"
 	restaurantlikebusiness "gitlab.com/genson1808/food-delivery/module/restaurantlike/business"
 	restaurantlikemodel "gitlab.com/genson1808/food-delivery/module/restaurantlike/model"
 	restaurantlikestore "gitlab.com/genson1808/food-delivery/module/restaurantlike/storage"
@@ -28,8 +27,8 @@ func UserLikeRestaurant(appCtx appctx.AppContext) gin.HandlerFunc {
 		db := appCtx.GetMainDBConnection()
 
 		store := restaurantlikestore.NewStore(db)
-		restaurantStore := restaurantstorage.NewStore(db)
-		biz := restaurantlikebusiness.NewUserLikeRestaurantBiz(store, restaurantStore)
+		//restaurantStore := restaurantstorage.NewStore(db)
+		biz := restaurantlikebusiness.NewUserLikeRestaurantBiz(store, appCtx.GetPubsub())
 
 		if err := biz.LikeRestaurant(c.Request.Context(), &data); err != nil {
 			panic(err)

@@ -1,6 +1,6 @@
 package common
 
-import "gitlab.com/genson1808/food-delivery/foundation/fimage"
+import "gitlab.com/genson1808/food-delivery/component/fimage"
 
 type SimpleUser struct {
 	SQLModel
