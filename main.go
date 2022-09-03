@@ -7,6 +7,7 @@ import (
 	"gitlab.com/genson1808/food-delivery/component/pubsub/pblocal"
 	"gitlab.com/genson1808/food-delivery/component/uploadprovider"
 	"gitlab.com/genson1808/food-delivery/middleware"
+	"gitlab.com/genson1808/food-delivery/subscriber"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
@@ -37,6 +38,8 @@ func main() {
 	}
 
 	appContext := appctx.NewAppContext(db, s3Provider, secretKey, ps, log)
+	psEngine := subscriber.NewEngine(appContext)
+	_ = psEngine.Start()
 
 	r := gin.Default()
 	r.Use(middleware.Recover(appContext))

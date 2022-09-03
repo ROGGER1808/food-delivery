@@ -28,7 +28,7 @@ func DecreaseLikeAfterUserLikeRestaurant(appCtx appctx.AppContext, ctx context.C
 //DecreaseLikeAfterUserLikeRestaurant decrease like restaurant using  pubsub integrate with asyncJob
 func DecreaseLikeAfterUserLikeRestaurant(appCtx appctx.AppContext) consumerJob {
 	return consumerJob{
-		Title: "User liked restaurant",
+		Title: "User disliked restaurant",
 		Handler: func(ctx context.Context, message *pubsub.Message) error {
 			store := restaurantstorage.NewStore(appCtx.GetMainDBConnection())
 			likeData := message.Data().(HasRestaurantId)
