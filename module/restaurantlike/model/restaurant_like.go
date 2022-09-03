@@ -16,6 +16,10 @@ type Like struct {
 	LikeAt int64              `json:"like_at" gorm:"column:like_at;"`
 }
 
+func (m *Like) GetRestaurantId() int {
+	return m.RestaurantId
+}
+
 func (m *Like) BeforeCreate(tx *gorm.DB) (err error) {
 	m.LikeAt = time.Now().UnixNano()
 	return

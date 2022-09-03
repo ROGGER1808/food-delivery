@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"gitlab.com/genson1808/food-delivery/common"
-	"gitlab.com/genson1808/food-delivery/foundation/appctx"
-	"gitlab.com/genson1808/food-delivery/foundation/tokenprovider/jwt"
+	"gitlab.com/genson1808/food-delivery/component/appctx"
+	"gitlab.com/genson1808/food-delivery/component/tokenprovider/jwt"
 	userstorage "gitlab.com/genson1808/food-delivery/module/user/storage"
 	"strings"
 )

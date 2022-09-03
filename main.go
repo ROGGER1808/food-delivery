@@ -2,8 +2,10 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"gitlab.com/genson1808/food-delivery/foundation/appctx"
-	"gitlab.com/genson1808/food-delivery/foundation/uploadprovider"
+	"gitlab.com/genson1808/food-delivery/component/appctx"
+	"gitlab.com/genson1808/food-delivery/component/logger"
+	"gitlab.com/genson1808/food-delivery/component/pubsub/pblocal"
+	"gitlab.com/genson1808/food-delivery/component/uploadprovider"
 	"gitlab.com/genson1808/food-delivery/middleware"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -28,8 +30,13 @@ func main() {
 	db = db.Debug()
 
 	s3Provider := uploadprovider.NewS3Provider(s3BucketName, s3Region, s3APIKey, s3SecretKey, s3Domain)
+	ps := pblocal.NewPubSub()
+	log, err := logger.New("foody")
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-	appContext := appctx.NewAppContext(db, s3Provider, secretKey)
+	appContext := appctx.NewAppContext(db, s3Provider, secretKey, ps, log)
 
 	r := gin.Default()
 	r.Use(middleware.Recover(appContext))

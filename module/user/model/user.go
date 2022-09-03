@@ -3,7 +3,7 @@ package usermodel
 import (
 	"errors"
 	"gitlab.com/genson1808/food-delivery/common"
-	"gitlab.com/genson1808/food-delivery/foundation/fimage"
+	"gitlab.com/genson1808/food-delivery/component/fimage"
 )
 
 const EntityName = "User"

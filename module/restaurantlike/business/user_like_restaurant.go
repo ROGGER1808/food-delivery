@@ -3,8 +3,10 @@ package restaurantlikebusiness
 import (
 	"context"
 	"gitlab.com/genson1808/food-delivery/common"
+	"gitlab.com/genson1808/food-delivery/component/asyncjob"
 	restaurantmodel "gitlab.com/genson1808/food-delivery/module/restaurant/model"
 	restaurantlikemodel "gitlab.com/genson1808/food-delivery/module/restaurantlike/model"
+	"log"
 )
 
 type UserLikeRestaurantStore interface {
@@ -44,7 +46,14 @@ func (biz *userLikeRestaurantBiz) LikeRestaurant(ctx context.Context, data *rest
 		return restaurantlikemodel.ErrCannotLikeRestaurant(err)
 	}
 
-	_ = biz.restaurantStore.IncreaseLikeCount(ctx, data.RestaurantId)
+	// Side effect
+	j := asyncjob.NewJob(func(ctx context.Context) error {
+		return biz.restaurantStore.IncreaseLikeCount(ctx, data.RestaurantId)
+	})
+
+	if err := asyncjob.NewGroup(true, j).Run(ctx); err != nil {
+		log.Println(err)
+	}
 
 	return nil
 }

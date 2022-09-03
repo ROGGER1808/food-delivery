@@ -3,9 +3,9 @@ package httpuser
 import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/genson1808/food-delivery/common"
-	"gitlab.com/genson1808/food-delivery/foundation/appctx"
-	hasher "gitlab.com/genson1808/food-delivery/foundation/hasher"
-	"gitlab.com/genson1808/food-delivery/foundation/tokenprovider/jwt"
+	"gitlab.com/genson1808/food-delivery/component/appctx"
+	hasher "gitlab.com/genson1808/food-delivery/component/hasher"
+	"gitlab.com/genson1808/food-delivery/component/tokenprovider/jwt"
 	userbusiness "gitlab.com/genson1808/food-delivery/module/user/business"
 	usermodel "gitlab.com/genson1808/food-delivery/module/user/model"
 	userstorage "gitlab.com/genson1808/food-delivery/module/user/storage"

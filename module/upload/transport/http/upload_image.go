@@ -3,7 +3,7 @@ package httpupload
 import (
 	"github.com/gin-gonic/gin"
 	"gitlab.com/genson1808/food-delivery/common"
-	"gitlab.com/genson1808/food-delivery/foundation/appctx"
+	"gitlab.com/genson1808/food-delivery/component/appctx"
 	uploadbiz "gitlab.com/genson1808/food-delivery/module/upload/business"
 	"net/http"
 
