@@ -32,6 +32,26 @@ func (engine *consumerEngine) Start() error {
 		true,
 		DecreaseLikeAfterUserLikeRestaurant(engine.appCtx))
 
+	engine.startSubTopic(
+		common.TopicUserLikeFood,
+		true,
+		UserLikeFood(engine.appCtx))
+
+	engine.startSubTopic(
+		common.TopicUserDislikeFood,
+		true,
+		UserDislikeFood(engine.appCtx))
+
+	engine.startSubTopic(
+		common.TopicUserRatingFood,
+		true,
+		CalculateRatingFood(engine.appCtx))
+
+	engine.startSubTopic(
+		common.TopicUserUpdateRatingFood,
+		true,
+		UpdateCalculateRatingFood(engine.appCtx))
+
 	return nil
 }
 
